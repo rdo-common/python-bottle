@@ -1,7 +1,7 @@
 %global srcname bottle
 Name:           python-%{srcname}
 Version:        0.10.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
@@ -36,6 +36,9 @@ rm %{buildroot}%{_bindir}/bottle.py
 %{python_sitelib}/*
 
 %changelog
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.7-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
