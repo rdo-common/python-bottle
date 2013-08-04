@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.11.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
@@ -67,6 +67,9 @@ popd
 %{python3_sitelib}/*
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Tue Apr 23 2013 Rahul Sundaram <sundaram@fedoraproject.org> - 0.11.6-1
 - upstream release 0.11.6
 - add python3 subpackage. resolves rhbz#949240
