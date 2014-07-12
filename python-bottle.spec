@@ -1,8 +1,8 @@
 %global srcname bottle
 
 Name:           python-%{srcname}
-Version:        0.11.6
-Release:        4%{?dist}
+Version:        0.12.6
+Release:        1%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
@@ -67,6 +67,9 @@ popd
 %{python3_sitelib}/*
 
 %changelog
+* Sat Jul 12 2014 Rahul Sundaram <sundaram@fedoraproject.org> - 0.12.6-1
+- resolves rhbz#1093257 - JSON content type not restrictive enough
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
