@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.12.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
@@ -67,6 +67,9 @@ popd
 %{python3_sitelib}/*
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Sat Jul 12 2014 Rahul Sundaram <sundaram@fedoraproject.org> - 0.12.6-1
 - resolves rhbz#1093257 - JSON content type not restrictive enough
 
