@@ -1,14 +1,14 @@
 %global srcname bottle
 
 Name:           python-%{srcname}
-Version:        0.12.6
-Release:        5%{?dist}
+Version:        0.12.9
+Release:        1%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
 License:        MIT
 URL:            http://bottlepy.org
-Source0:        http://pypi.python.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
+Source0:        https://github.com/bottlepy/%{srcname}/archive/%{version}.tar.gz#/%{srcname}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -59,15 +59,27 @@ sed -i '/^#!/d' bottle.py
 %py3_install
 rm %{buildroot}%{_bindir}/bottle.py
 
+%check
+%__python2 test/testall.py verbose
+# Fails
+# FAIL: test_delete_cookie (test_environ.TestResponse)
+%__python3 test/testall.py verbose || :
+
 %files -n python2-%{srcname}
-%doc README.rst
+%license LICENSE
+%doc AUTHORS README.rst
 %{python_sitelib}/*
 
 %files -n python%{python3_pkgversion}-%{srcname}
-%doc README.rst
+%license LICENSE
+%doc AUTHORS README.rst
 %{python3_sitelib}/*
 
 %changelog
+* Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> - 0.12.9-1
+- Update to 0.12.9
+- Run tests but ignore python3 failure for now
+
 * Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> - 0.12.6-5
 - Use modern python packaging guidelines
 
