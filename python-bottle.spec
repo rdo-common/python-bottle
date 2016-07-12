@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:        0.12.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
@@ -14,8 +14,8 @@ BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python%{python3_pkgversion}-devel
+BuildRequires:  python%{python3_pkgversion}-setuptools
 
 %description
 Bottle is a fast and simple micro-framework for small web-applications. 
@@ -24,10 +24,22 @@ a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and
 template engines. All in a single file and with no dependencies other than the 
 Python Standard Library.
 
-%package -n python3-%{srcname}
+%package -n python2-%{srcname}
 Summary:        Fast and simple WSGI-framework for small web-applications
+%{?python_provide:%python_provide python2-%{srcname}}
 
-%description -n python3-%{srcname}
+%description -n python2-%{srcname}
+Bottle is a fast and simple micro-framework for small web-applications. 
+It offers request dispatching (Routes) with URL parameter support, Templates, 
+a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
+template engines. All in a single file and with no dependencies other than the 
+Python Standard Library.
+
+%package -n python%{python3_pkgversion}-%{srcname}
+Summary:        Fast and simple WSGI-framework for small web-applications
+%{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
+
+%description -n python%{python3_pkgversion}-%{srcname}
 Bottle is a fast and simple micro-framework for small web-applications. 
 It offers request dispatching (Routes) with URL parameter support, Templates, 
 a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
@@ -38,35 +50,27 @@ Python Standard Library.
 %setup -q -n %{srcname}-%{version}
 sed -i '/^#!/d' bottle.py
 
-rm -rf %{py3dir}
-cp -a . %{py3dir}
-find %{py3dir} -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python3}|'
-
 %build
-%{__python} setup.py build
-
-pushd %{py3dir}
-%{__python3} setup.py build
-popd
+%py2_build
+%py3_build
 
 %install
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
+%py2_install
+%py3_install
 rm %{buildroot}%{_bindir}/bottle.py
 
-pushd %{py3dir}
-%{__python3} setup.py install --skip-build --root %{buildroot}
-rm %{buildroot}%{_bindir}/bottle.py
-popd
-
-%files
-%doc README.rst PKG-INFO
+%files -n python2-%{srcname}
+%doc README.rst
 %{python_sitelib}/*
 
-%files -n python3-%{srcname}
-%doc README.rst PKG-INFO
+%files -n python%{python3_pkgversion}-%{srcname}
+%doc README.rst
 %{python3_sitelib}/*
 
 %changelog
+* Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> - 0.12.6-5
+- Use modern python packaging guidelines
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.12.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
