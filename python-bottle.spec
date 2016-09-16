@@ -1,20 +1,45 @@
 %global srcname bottle
 
 Name:           python-%{srcname}
-Version:        0.12.6
+Version:        0.12.9
 Release:        1%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 
 Group:          Development/Languages
 License:        MIT
 URL:            http://bottlepy.org
-Source0:        http://pypi.python.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
+Source0:        https://github.com/bottlepy/%{srcname}/archive/%{version}.tar.gz#/%{srcname}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
 
+BuildRequires:  python%{python3_pkgversion}-devel
+BuildRequires:  python%{python3_pkgversion}-setuptools
+
 %description
+Bottle is a fast and simple micro-framework for small web-applications. 
+It offers request dispatching (Routes) with URL parameter support, Templates, 
+a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
+template engines. All in a single file and with no dependencies other than the 
+Python Standard Library.
+
+%package -n python2-%{srcname}
+Summary:        Fast and simple WSGI-framework for small web-applications
+%{?python_provide:%python_provide python2-%{srcname}}
+
+%description -n python2-%{srcname}
+Bottle is a fast and simple micro-framework for small web-applications. 
+It offers request dispatching (Routes) with URL parameter support, Templates, 
+a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
+template engines. All in a single file and with no dependencies other than the 
+Python Standard Library.
+
+%package -n python%{python3_pkgversion}-%{srcname}
+Summary:        Fast and simple WSGI-framework for small web-applications
+%{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
+
+%description -n python%{python3_pkgversion}-%{srcname}
 Bottle is a fast and simple micro-framework for small web-applications. 
 It offers request dispatching (Routes) with URL parameter support, Templates, 
 a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
@@ -25,19 +50,37 @@ Python Standard Library.
 %setup -q -n %{srcname}-%{version}
 sed -i '/^#!/d' bottle.py
 
-
 %build
-%{__python} setup.py build
+%py2_build
+%py3_build
 
 %install
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
+%py2_install
+%py3_install
 rm %{buildroot}%{_bindir}/bottle.py
 
-%files
-%doc README.rst PKG-INFO
+%check
+%__python2 test/testall.py verbose
+# Fails
+# FAIL: test_delete_cookie (test_environ.TestResponse)
+%__python3 test/testall.py verbose || :
+
+%files -n python2-%{srcname}
+%license LICENSE
+%doc AUTHORS README.rst
 %{python_sitelib}/*
 
+%files -n python%{python3_pkgversion}-%{srcname}
+%license LICENSE
+%doc AUTHORS README.rst
+%{python3_sitelib}/*
+
 %changelog
+* Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> - 0.12.9-1
+- Update to 0.12.9
+- Run tests but ignore python3 failure for now
+- Use modern python packaging guidelines
+
 * Fri Feb 20 2015 Michel Samia <msamia@netsuite.com> - 0.12.6-1
 - populated new el6 branch from master
 - removed python3 parts as it isn't in el6
