@@ -1,5 +1,9 @@
 %global srcname bottle
 
+%if 0%{?fedora}
+%global with_python3 1
+%endif
+
 Name:           python-%{srcname}
 Version:        0.12.9
 Release:        1%{?dist}
@@ -13,9 +17,6 @@ Source0:        https://github.com/bottlepy/%{srcname}/archive/%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python-devel
 BuildRequires:  python-setuptools
-
-BuildRequires:  python%{python3_pkgversion}-devel
-BuildRequires:  python%{python3_pkgversion}-setuptools
 
 %description
 Bottle is a fast and simple micro-framework for small web-applications. 
@@ -35,9 +36,13 @@ a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and
 template engines. All in a single file and with no dependencies other than the 
 Python Standard Library.
 
+%if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-%{srcname}
 Summary:        Fast and simple WSGI-framework for small web-applications
 %{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
+
+BuildRequires:  python%{python3_pkgversion}-devel
+BuildRequires:  python%{python3_pkgversion}-setuptools
 
 %description -n python%{python3_pkgversion}-%{srcname}
 Bottle is a fast and simple micro-framework for small web-applications. 
@@ -45,6 +50,7 @@ It offers request dispatching (Routes) with URL parameter support, Templates,
 a built-in HTTP Server and adapters for many third party WSGI/HTTP-server and 
 template engines. All in a single file and with no dependencies other than the 
 Python Standard Library.
+%endif
 
 %prep
 %setup -q -n %{srcname}-%{version}
@@ -52,28 +58,36 @@ sed -i '/^#!/d' bottle.py
 
 %build
 %py2_build
+%if 0%{?with_python3}
 %py3_build
+%endif
 
 %install
 %py2_install
+%if 0%{?with_python3}
 %py3_install
+%endif
 rm %{buildroot}%{_bindir}/bottle.py
 
 %check
 %__python2 test/testall.py verbose
+%if 0%{?with_python3}
 # Fails
 # FAIL: test_delete_cookie (test_environ.TestResponse)
 %__python3 test/testall.py verbose || :
+%endif
 
 %files -n python2-%{srcname}
 %license LICENSE
 %doc AUTHORS README.rst
-%{python_sitelib}/*
+%{python2_sitelib}/*
 
+%if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-%{srcname}
 %license LICENSE
 %doc AUTHORS README.rst
 %{python3_sitelib}/*
+%endif
 
 %changelog
 * Tue Jul 12 2016 Orion Poplawski <orion@cora.nwra.com> - 0.12.9-1
